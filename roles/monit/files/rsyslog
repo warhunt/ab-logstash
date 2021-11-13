@@ -1,0 +1,14 @@
+ check process rsyslogd with pidfile /var/run/rsyslogd.pid
+   group rsyslog
+   start program = "/etc/init.d/rsyslog start"
+   stop program = "/etc/init.d/rsyslog stop"
+   depend nginx_bin
+   depend nginx_rc
+
+ check file nginx_bin with path /usr/sbin/rsyslogd
+   group rsyslog
+   include /etc/monit/templates/rootbin
+
+ check file rsyslog_rc with path /etc/init.d/rsyslog
+   group rsyslog
+   include /etc/monit/templates/rootbin
