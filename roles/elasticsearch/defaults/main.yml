@@ -1,0 +1,6 @@
+---
+# defaults file for elasticsearch
+line_to_replace:
+  - { regexp: '^(.*)network.host(.*)$', line: 'network.host: {{ inventory_hostname }}'}
+  - { regexp: '^(.*)http.port(.*)$', line: 'http.port: 9200'}
+  - { regexp: '^(.*)discovery.seed_hosts(.*)$', line: 'discovery.seed_hosts: ["{{ inventory_hostname }}"]'}

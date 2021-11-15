@@ -1,0 +1,47 @@
+---
+# tasks file for elasticsearch
+- name: Add an Apt signing key
+  apt_key:
+    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    state: present
+
+- name: Install apt-transport-https
+  apt:
+    name: apt-transport-https
+    update_cache: yes
+
+- name: Add specified repository into sources list
+  apt_repository:
+    repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
+    state: present
+
+- name: Install elasticsearch
+  apt:
+    name: elasticsearch
+    update_cache: yes
+  notify:
+    - Restart elasticsearch
+
+- name: Create a directory /etc/systemd/system/elasticsearch.service.d if it does not exist
+  ansible.builtin.file:
+    path: /etc/systemd/system/elasticsearch.service.d
+    state: directory
+
+- name: Copy file startup-timeout.conf
+  ansible.builtin.copy:
+    src: startup-timeout.conf
+    dest: /etc/systemd/system/elasticsearch.service.d/startup-timeout.conf
+  notify:
+    - Restart elasticsearch
+
+- name: Replace line in /etc/elasticsearch/elasticsearch.yml
+  lineinfile: 
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: '{{ item.regexp }}' 
+    line: '{{ item.line }}'
+    backrefs: yes
+  with_items: '{{ line_to_replace }}'
+  notify:
+    - Restart elasticsearch
+
+  
