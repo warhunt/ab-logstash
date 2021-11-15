@@ -44,4 +44,14 @@
   notify:
     - Restart elasticsearch
 
+- name: Add a line to a /etc/elasticsearch/elasticsearch.yml 
+  lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml 
+    line: "{{ item }}"
+    insertafter: '^(.*)http.port(.*)$'
+  with_items: '{{ line_to_add }}'
+  notify:
+    - Restart elasticsearch
+
+
   

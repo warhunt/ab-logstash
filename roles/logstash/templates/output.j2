@@ -2,4 +2,7 @@ output {
     file {
         path => "/var/log/logstash/%{host}/test-%{+YYYY-MM-dd}.txt"
     }
+    elasticsearch {
+        hosts => ["{{ inventory_hostname }}:9200"]
+    }
 }
