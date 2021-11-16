@@ -1,26 +1,15 @@
 ---
 # tasks file for logstash
-- name: Add an Apt signing key
-  apt_key:
-    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
-    state: present
-
-- name: Install apt-transport-https
+- name: Install a logstash-5.6.16.deb package from the internet
   apt:
-    name: apt-transport-https
-    update_cache: yes
-
-- name: Add specified repository into sources list
-  ansible.builtin.apt_repository:
-    repo: deb https://artifacts.elastic.co/packages/7.x/apt stable main
-    state: present
-
-- name: Install logstash
-  apt:
-    name: logstash
-    update_cache: yes
+    deb: https://artifacts.elastic.co/downloads/logstash/logstash-5.6.16.deb
   notify:
     - Restart logstash
+
+- name: Hold logstash
+  dpkg_selections:
+    name: logstash
+    selection: hold
 
 - name: Template a file to /etc/logstash/conf.d
   template:
